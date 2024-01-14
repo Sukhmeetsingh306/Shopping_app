@@ -49,6 +49,28 @@ class ProductItem extends StatelessWidget {
                 product.title,
                 product.price,
               );
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  //backgroundColor: Colors.white,
+                  content: const Text(
+                    'Item added to cart',
+                    style: TextStyle(
+                      //color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  duration: const Duration(seconds: 2),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.undo(product.id);
+                    },
+                  ),
+                ),
+              );
             },
             icon: const Icon(
               Icons.shopping_bag,

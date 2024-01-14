@@ -32,6 +32,49 @@ class CartItem extends StatelessWidget {
         ).removeItem(productId);
       },
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+              'Delete',
+              style: textStyle(
+                15,
+                FontWeight.w400,
+              ),
+            ),
+            content: Text(
+              'Delete Confirm',
+              style: textStyle(
+                16,
+                FontWeight.bold,
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  'No',
+                  style: textStyle(
+                    16,
+                    FontWeight.w400,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(
+                  'Yes',
+                  style: textStyle(
+                    16,
+                    FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
       background: Container(
         color: Theme.of(context).colorScheme.error,
         alignment: Alignment.centerRight,
