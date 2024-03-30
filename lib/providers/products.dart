@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-class Product with ChangeNotifier{
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
+
+class Product with ChangeNotifier {
   final String id;
   final String title;
   final String description;
@@ -8,16 +12,17 @@ class Product with ChangeNotifier{
   final String imageUrl;
   bool isFavorite;
 
-  Product(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.imageUrl,
-      required this.price,
-      this.isFavorite = false});
+  Product({
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    required this.price,
+    this.isFavorite = false,
+    String? id,
+  }) : id = id ?? uuid.v4();
 
-      void toggleFavoriteStatus(){
-        isFavorite = !isFavorite;
-        notifyListeners();
-      }
+  void toggleFavoriteStatus() {
+    isFavorite = !isFavorite;
+    notifyListeners();
+  }
 }
