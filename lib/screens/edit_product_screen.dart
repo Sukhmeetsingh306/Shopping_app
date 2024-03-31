@@ -34,7 +34,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     'title': '',
     'description': '',
     'price': '',
-    'imageUrl': null,
+    'imageUrl': '',
   };
   var loading = false;
 
@@ -69,7 +69,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final productId = ModalRoute.of(context)?.settings.arguments as String;
+      final productId = ModalRoute.of(context)!.settings.arguments as String;
       if (productId != null) {
         _editProduct = Provider.of<ProductProviders>(
           context,
@@ -81,7 +81,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'price': _editProduct.price.toString(),
           // 'imageUrl': _editProduct.imageUrl,
           'imageUrl': '',
-          'id': _editProduct.id,
         };
         _imageUrlController.text = _editProduct.imageUrl;
       }
@@ -314,23 +313,38 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         ),
                         Expanded(
                           child: TextFormField(
-                            //initialValue: _initValue['imageUrl'],
-                            decoration: const InputDecoration(
-                              labelText: 'Image URL',
-                            ),
+                            decoration:
+                                const InputDecoration(labelText: 'Image URL'),
                             keyboardType: TextInputType.url,
                             textInputAction: TextInputAction.done,
                             controller: _imageUrlController,
                             focusNode: _imageUrlFocusNode,
-                            onFieldSubmitted: (value) => _saveForm(),
-                            onSaved: (newValue) {
+                            onFieldSubmitted: (_) {
+                              _saveForm();
+                            },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter an image URL.';
+                              }
+                              if (!value.startsWith('http') &&
+                                  !value.startsWith('https')) {
+                                return 'Please enter a valid URL.';
+                              }
+                              if (!value.endsWith('.png') &&
+                                  !value.endsWith('.jpg') &&
+                                  !value.endsWith('.jpeg')) {
+                                return 'Please enter a valid image URL.';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
                               _editProduct = Product(
+                                title: _editProduct.title,
+                                price: _editProduct.price,
+                                description: _editProduct.description,
+                                imageUrl: value!,
                                 id: _editProduct.id,
                                 isFavorite: _editProduct.isFavorite,
-                                title: _editProduct.title,
-                                description: _editProduct.description,
-                                imageUrl: newValue!,
-                                price: _editProduct.price,
                               );
                             },
                           ),
